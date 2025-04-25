@@ -1,0 +1,28 @@
+name: furia_webchat
+description: Um app de rede social para o time FURIA
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.18.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^2.17.5  # Versão original
+  firebase_auth: ^4.7.0
+  cloud_firestore: ^4.17.5  # Versão mais antiga
+  firebase_storage: ^11.7.1
+  firebase_core_web: ^2.17.5
+  image_picker: ^0.8.5+3
+  provider: ^6.0.5
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+assets:
+    - assets/furia_logo.png
