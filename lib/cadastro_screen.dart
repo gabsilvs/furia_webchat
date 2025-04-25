@@ -82,11 +82,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
             children: [
               const SizedBox(height: 60),
               // Logo
-              Image.asset(
-                'assets/furia_logo.png',
-                height: 100,
-                color: Colors.white,
-              ),
+              Image.asset('logo.png', width: 100),
               const SizedBox(height: 40),
               // Título
               Text(
@@ -151,7 +147,8 @@ class _CadastroScreenState extends State<CadastroScreen> {
   }
 
   // Campo de texto reutilizável
-  Widget _buildTextField(TextEditingController controller, String label, {bool obscureText = false}) {
+  Widget _buildTextField(TextEditingController controller, String label,
+      {bool obscureText = false}) {
     return TextField(
       controller: controller,
       style: TextStyle(color: Colors.white),

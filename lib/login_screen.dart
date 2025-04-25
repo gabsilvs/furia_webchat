@@ -75,11 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const SizedBox(height: 60),
               // Logo
-              Image.asset(
-                'assets/furia_logo.png',
-                height: 100,
-                color: Colors.white,
-              ),
+              Image.asset('assets/logo.png', width: 100),
               const SizedBox(height: 40),
               // Título
               Text(
@@ -96,7 +92,8 @@ class _LoginScreenState extends State<LoginScreen> {
               _buildTextField(_emailController, 'E-mail', Icons.email),
               const SizedBox(height: 20),
               // Campo de senha
-              _buildTextField(_senhaController, 'Senha', Icons.lock, obscureText: true),
+              _buildTextField(_senhaController, 'Senha', Icons.lock,
+                  obscureText: true),
               const SizedBox(height: 30),
               // Botão de login
               _buildLoginButton(),
@@ -120,7 +117,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // Campo de texto reutilizável para e-mail e senha
-  Widget _buildTextField(TextEditingController controller, String label, IconData icon, {bool obscureText = false}) {
+  Widget _buildTextField(
+      TextEditingController controller, String label, IconData icon,
+      {bool obscureText = false}) {
     return TextField(
       controller: controller,
       style: TextStyle(color: Colors.white),

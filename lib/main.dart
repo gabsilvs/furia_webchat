@@ -2,17 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'login_screen.dart';
 import 'cadastro_screen.dart';
-import 'firebase_options.dart'; // Arquivo gerado pelo Firebase CLI
 //import 'package:your_project/home_screen.dart';
+import 'env_example.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform, // Inicialize com as credenciais para o web
+    options: FirebaseOptions(
+      apiKey: Env.apiKey,
+      appId: Env.appId,
+      messagingSenderId: Env.messagingSenderId,
+      projectId: Env.projectId,
+      authDomain: Env.authDomain,
+      storageBucket: Env.storageBucket,
+    ),
   );
   runApp(MyApp());
 }
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
