@@ -1,7 +1,6 @@
-// ignore_for_file: unused_field
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -14,7 +13,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _senhaController = TextEditingController();
   bool _isLoading = false;
-  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -22,7 +20,6 @@ class _LoginScreenState extends State<LoginScreen> {
     _checkUserLoggedIn();
   }
 
-  // Verifica se o usuário já está logado
   void _checkUserLoggedIn() {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -30,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // Função de login
   Future<void> _login() async {
     if (_emailController.text.isEmpty || _senhaController.text.isEmpty) {
       _showSnackBar("Preencha e-mail e senha.");
@@ -55,7 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // Exibe mensagem de erro
   void _showSnackBar(String msg) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(msg),
@@ -68,55 +63,96 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 60),
-              // Logo
-              Image.asset('assets/logo.png', width: 100),
-              const SizedBox(height: 40),
-              // Título
-              Text(
-                'ENTRAR',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
-                ),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Text(
+              "Faça parte da comunidade FURIA!",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 40),
-              // Campo de e-mail
-              _buildTextField(_emailController, 'E-mail', Icons.email),
-              const SizedBox(height: 20),
-              // Campo de senha
-              _buildTextField(_senhaController, 'Senha', Icons.lock,
-                  obscureText: true),
-              const SizedBox(height: 30),
-              // Botão de login
-              _buildLoginButton(),
-              const SizedBox(height: 20),
-              // Link para cadastro
-              TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/cadastro'),
-                child: Text(
-                  'Criar uma conta',
-                  style: TextStyle(
-                    color: Colors.white,
-                    decoration: TextDecoration.underline,
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  // Parte esquerda - Formulário
+                  Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Logo
+                            Image.asset('assets/logo.png', width: 100),
+                            const SizedBox(height: 40),
+                            const SizedBox(height: 40),
+                            _buildTextField(
+                                _emailController, 'E-mail', Icons.email),
+                            const SizedBox(height: 20),
+                            _buildTextField(
+                                _senhaController, 'Senha', Icons.lock,
+                                obscureText: true),
+                            const SizedBox(height: 30),
+                            _buildLoginButton(),
+                            const SizedBox(height: 20),
+                            TextButton(
+                              onPressed: () =>
+                                  Navigator.pushNamed(context, '/cadastro'),
+                              child: Text(
+                                'Criar uma conta',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  // Parte direita - Carrossel
+                  Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          autoPlay: true,
+                          enlargeCenterPage: true,
+                          viewportFraction: 1.0,
+                          height: double.infinity,
+                        ),
+                        items: [
+                          'assets/carrosel1.png',
+                          'assets/carrosel2.png',
+                          'assets/carrosel3.png',
+                        ].map((imagePath) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.asset(
+                              imagePath,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  // Campo de texto reutilizável para e-mail e senha
   Widget _buildTextField(
       TextEditingController controller, String label, IconData icon,
       {bool obscureText = false}) {
@@ -142,7 +178,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Botão de login
   Widget _buildLoginButton() {
     return SizedBox(
       width: double.infinity,
