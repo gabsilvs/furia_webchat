@@ -33,6 +33,11 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    if (!_emailController.text.contains('@')) {
+      _showSnackBar("Digite um e-mail válido.");
+      return;
+    }
+
     setState(() => _isLoading = true);
 
     try {
@@ -40,7 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text.trim(),
         password: _senhaController.text.trim(),
       );
-
       Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       _showSnackBar(e.message ?? "Erro ao fazer login.");
@@ -52,10 +56,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _showSnackBar(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(msg),
-      backgroundColor: Colors.red[400],
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: Colors.red[400],
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   @override
@@ -86,9 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // Logo
                             Image.asset('assets/logo.png', width: 100),
-                            const SizedBox(height: 40),
                             const SizedBox(height: 40),
                             _buildTextField(
                                 _emailController, 'E-mail', Icons.email),
@@ -158,22 +163,22 @@ class _LoginScreenState extends State<LoginScreen> {
       {bool obscureText = false}) {
     return TextField(
       controller: controller,
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       obscureText: obscureText,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: Colors.white70),
+        labelStyle: const TextStyle(color: Colors.white70),
         prefixIcon: Icon(icon, color: Colors.white70),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white54),
+          borderSide: const BorderSide(color: Colors.white54),
           borderRadius: BorderRadius.circular(10),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+          borderSide: const BorderSide(color: Colors.white),
           borderRadius: BorderRadius.circular(10),
         ),
         filled: true,
-        fillColor: Colors.black,
+        fillColor: Colors.grey[900],
       ),
     );
   }
@@ -193,8 +198,8 @@ class _LoginScreenState extends State<LoginScreen> {
           elevation: 0,
         ),
         child: _isLoading
-            ? CircularProgressIndicator(color: Colors.black)
-            : Text(
+            ? const CircularProgressIndicator(color: Colors.black)
+            : const Text(
                 'ENTRAR',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,

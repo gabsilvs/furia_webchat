@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'firebase_auth.dart'; // Seu arquivo de funções FirebaseAuthService
+import 'package:image_picker/image_picker.dart';
+import 'firebase_auth.dart';
 
 class CadastroScreen extends StatefulWidget {
   const CadastroScreen({Key? key}) : super(key: key);
@@ -20,7 +21,12 @@ class _CadastroScreenState extends State<CadastroScreen> {
   bool _isLoading = false;
 
   Future<void> _pickImage() async {
-    // Aqui você pode implementar o image_picker
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imagem = File(pickedFile.path);
+      });
+    }
   }
 
   Future<void> _cadastrar() async {
@@ -30,6 +36,11 @@ class _CadastroScreenState extends State<CadastroScreen> {
         _jogadorController.text.isEmpty ||
         _assuntoController.text.isEmpty) {
       _showSnackBar("Por favor, preencha todos os campos.");
+      return;
+    }
+
+    if (!_emailController.text.contains('@')) {
+      _showSnackBar("Digite um e-mail válido.");
       return;
     }
 
@@ -47,17 +58,20 @@ class _CadastroScreenState extends State<CadastroScreen> {
 
       Navigator.pushReplacementNamed(context, '/home');
     } catch (e) {
-      _showSnackBar("Erro ao cadastrar.");
+      _showSnackBar("Erro ao cadastrar: ${e.toString()}");
     } finally {
       setState(() => _isLoading = false);
     }
   }
 
   void _showSnackBar(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(msg),
-      backgroundColor: Colors.red[400],
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: Colors.red[400],
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   @override
@@ -90,6 +104,8 @@ class _CadastroScreenState extends State<CadastroScreen> {
                           children: [
                             Image.asset('assets/logo.png', width: 100),
                             const SizedBox(height: 40),
+                            _buildImagePicker(),
+                            const SizedBox(height: 20),
                             _buildTextField(
                                 _nomeController, 'Nome', Icons.person),
                             const SizedBox(height: 20),
@@ -105,16 +121,6 @@ class _CadastroScreenState extends State<CadastroScreen> {
                             const SizedBox(height: 20),
                             _buildTextField(_assuntoController,
                                 'Assunto de Interesse', Icons.chat),
-                            const SizedBox(height: 30),
-                            ElevatedButton.icon(
-                              onPressed: _pickImage,
-                              icon: Icon(Icons.image, color: Colors.black),
-                              label: Text('Escolher Imagem'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: Colors.black,
-                              ),
-                            ),
                             const SizedBox(height: 30),
                             _buildCadastroButton(),
                           ],
@@ -160,27 +166,53 @@ class _CadastroScreenState extends State<CadastroScreen> {
     );
   }
 
+  Widget _buildImagePicker() {
+    return Column(
+      children: [
+        if (_imagem != null)
+          CircleAvatar(
+            radius: 50,
+            backgroundImage: FileImage(_imagem!),
+          )
+        else
+          const Icon(Icons.account_circle, size: 100, color: Colors.white70),
+        const SizedBox(height: 10),
+        ElevatedButton.icon(
+          onPressed: _pickImage,
+          icon: const Icon(Icons.camera_alt, color: Colors.black),
+          label: const Text('Escolher Foto', style: TextStyle(color: Colors.black)),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildTextField(
       TextEditingController controller, String label, IconData icon,
       {bool obscureText = false}) {
     return TextField(
       controller: controller,
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       obscureText: obscureText,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: Colors.white70),
+        labelStyle: const TextStyle(color: Colors.white70),
         prefixIcon: Icon(icon, color: Colors.white70),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white54),
+          borderSide: const BorderSide(color: Colors.white54),
           borderRadius: BorderRadius.circular(10),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+          borderSide: const BorderSide(color: Colors.white),
           borderRadius: BorderRadius.circular(10),
         ),
         filled: true,
-        fillColor: Colors.black,
+        fillColor: Colors.grey[900],
       ),
     );
   }
@@ -200,8 +232,8 @@ class _CadastroScreenState extends State<CadastroScreen> {
           elevation: 0,
         ),
         child: _isLoading
-            ? CircularProgressIndicator(color: Colors.black)
-            : Text(
+            ? const CircularProgressIndicator(color: Colors.black)
+            : const Text(
                 'CADASTRAR',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,

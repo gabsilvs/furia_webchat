@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:furia_webchat/perfil_screen.dart';
 import 'login_screen.dart';
 import 'cadastro_screen.dart';
-//import 'package:your_project/home_screen.dart';
-import 'env_example.dart';
+import 'home_screen.dart';
+import 'env.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,9 +18,12 @@ void main() async {
       storageBucket: Env.storageBucket,
     ),
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,12 +31,18 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         primaryColor: Colors.black,
         scaffoldBackgroundColor: Colors.black,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.black,
+          elevation: 0,
+          centerTitle: true,
+        ),
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const LoginScreen(),  // Rota inicial (Login)
-        '/cadastro': (context) => const CadastroScreen(),  // Rota para cadastro
-        //'/home': (context) => const HomeScreen(),  // Rota para a tela principal (após login)
+        '/': (context) => const LoginScreen(),
+        '/cadastro': (context) => const CadastroScreen(),
+        '/home': (context) => HomeScreen(),
+        '/perfil': (context) => PerfilScreen(),
       },
       debugShowCheckedModeBanner: false,
     );
