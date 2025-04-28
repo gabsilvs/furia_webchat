@@ -8,18 +8,17 @@ class FirebaseAuthService {
   static final _firestore = FirebaseFirestore.instance;
   static final _storage = FirebaseStorage.instance;
 
-  // Verifica se o usuário está autenticado e retorna
   static Future<User?> autoLogin() async {
     return _auth.currentUser;
   }
 
-  // Cadastra um novo usuário
   static Future<User?> cadastrarUsuario({
     required String nome,
     required String email,
     required String senha,
-    required String jogador,
-    required String assunto,
+    required String cpf,
+    required List<String> jogadores,
+    required List<String> assuntos,
     String? twitter,
     String? instagram,
     File? imagem,
@@ -44,8 +43,9 @@ class FirebaseAuthService {
         'uid': credenciais.user!.uid,
         'nome': nome,
         'email': email,
-        'jogadorFavorito': jogador,
-        'assuntoInteresse': assunto,
+        'cpf': cpf,
+        'jogadoresFavoritos': jogadores,
+        'assuntosInteresse': assuntos,
         'twitter': twitter,
         'instagram': instagram,
         'fotoPerfil': imageUrl,
@@ -58,7 +58,6 @@ class FirebaseAuthService {
     }
   }
 
-  // Faz o logout do usuário
   static Future<void> logout() async {
     await _auth.signOut();
   }

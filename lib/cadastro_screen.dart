@@ -1,3 +1,4 @@
+// CadastroScreen.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -15,10 +16,30 @@ class _CadastroScreenState extends State<CadastroScreen> {
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _senhaController = TextEditingController();
-  final TextEditingController _jogadorController = TextEditingController();
-  final TextEditingController _assuntoController = TextEditingController();
+  final TextEditingController _cpfController = TextEditingController();
   File? _imagem;
   bool _isLoading = false;
+
+  List<String> _jogadoresSelecionados = [];
+  List<String> _assuntosSelecionados = [];
+
+  final List<String> jogadores = [
+    'yuurih',
+    'KSCERATO',
+    'FalleN',
+    'molodoy',
+    'YEKINDAR',
+    'sidde',
+    'Hepa',
+  ];
+
+  final List<String> assuntos = [
+    'Transações',
+    'Jogos Ao vivo',
+    'Torneios',
+    'Interagir com a comunidade Furia',
+    'Dúvidas',
+  ];
 
   Future<void> _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -33,8 +54,9 @@ class _CadastroScreenState extends State<CadastroScreen> {
     if (_nomeController.text.isEmpty ||
         _emailController.text.isEmpty ||
         _senhaController.text.isEmpty ||
-        _jogadorController.text.isEmpty ||
-        _assuntoController.text.isEmpty) {
+        _cpfController.text.isEmpty ||
+        _jogadoresSelecionados.isEmpty ||
+        _assuntosSelecionados.isEmpty) {
       _showSnackBar("Por favor, preencha todos os campos.");
       return;
     }
@@ -51,8 +73,9 @@ class _CadastroScreenState extends State<CadastroScreen> {
         nome: _nomeController.text,
         email: _emailController.text,
         senha: _senhaController.text,
-        jogador: _jogadorController.text,
-        assunto: _assuntoController.text,
+        cpf: _cpfController.text,
+        jogadores: _jogadoresSelecionados,
+        assuntos: _assuntosSelecionados,
         imagem: _imagem,
       );
 
@@ -93,7 +116,6 @@ class _CadastroScreenState extends State<CadastroScreen> {
             Expanded(
               child: Row(
                 children: [
-                  // Parte esquerda - Formulário
                   Expanded(
                     flex: 1,
                     child: Padding(
@@ -106,21 +128,17 @@ class _CadastroScreenState extends State<CadastroScreen> {
                             const SizedBox(height: 40),
                             _buildImagePicker(),
                             const SizedBox(height: 20),
-                            _buildTextField(
-                                _nomeController, 'Nome', Icons.person),
+                            _buildTextField(_nomeController, 'Nome', Icons.person),
                             const SizedBox(height: 20),
-                            _buildTextField(
-                                _emailController, 'E-mail', Icons.email),
+                            _buildTextField(_cpfController, 'CPF', Icons.badge),
                             const SizedBox(height: 20),
-                            _buildTextField(
-                                _senhaController, 'Senha', Icons.lock,
-                                obscureText: true),
+                            _buildTextField(_emailController, 'E-mail', Icons.email),
                             const SizedBox(height: 20),
-                            _buildTextField(_jogadorController,
-                                'Jogador Favorito', Icons.sports_esports),
+                            _buildTextField(_senhaController, 'Senha', Icons.lock, obscureText: true),
                             const SizedBox(height: 20),
-                            _buildTextField(_assuntoController,
-                                'Assunto de Interesse', Icons.chat),
+                            _buildMultiSelectJogadores(),
+                            const SizedBox(height: 20),
+                            _buildMultiSelectAssuntos(),
                             const SizedBox(height: 30),
                             _buildCadastroButton(),
                           ],
@@ -128,7 +146,6 @@ class _CadastroScreenState extends State<CadastroScreen> {
                       ),
                     ),
                   ),
-                  // Parte direita - Carrossel
                   Expanded(
                     flex: 1,
                     child: Padding(
@@ -217,6 +234,68 @@ class _CadastroScreenState extends State<CadastroScreen> {
     );
   }
 
+  Widget _buildMultiSelectJogadores() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Jogadores Favoritos', style: TextStyle(color: Colors.white70)),
+        Wrap(
+          spacing: 8,
+          children: jogadores.map((jogador) {
+            final isSelected = _jogadoresSelecionados.contains(jogador);
+            return FilterChip(
+              label: Text(jogador),
+              selected: isSelected,
+              onSelected: (selected) {
+                setState(() {
+                  if (selected) {
+                    _jogadoresSelecionados.add(jogador);
+                  } else {
+                    _jogadoresSelecionados.remove(jogador);
+                  }
+                });
+              },
+              selectedColor: Colors.white,
+              backgroundColor: Colors.grey[800],
+              labelStyle: TextStyle(color: isSelected ? Colors.black : Colors.white),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMultiSelectAssuntos() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Assuntos de Interesse', style: TextStyle(color: Colors.white70)),
+        Wrap(
+          spacing: 8,
+          children: assuntos.map((assunto) {
+            final isSelected = _assuntosSelecionados.contains(assunto);
+            return FilterChip(
+              label: Text(assunto),
+              selected: isSelected,
+              onSelected: (selected) {
+                setState(() {
+                  if (selected) {
+                    _assuntosSelecionados.add(assunto);
+                  } else {
+                    _assuntosSelecionados.remove(assunto);
+                  }
+                });
+              },
+              selectedColor: Colors.white,
+              backgroundColor: Colors.grey[800],
+              labelStyle: TextStyle(color: isSelected ? Colors.black : Colors.white),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
   Widget _buildCadastroButton() {
     return SizedBox(
       width: double.infinity,
@@ -249,8 +328,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
     _nomeController.dispose();
     _emailController.dispose();
     _senhaController.dispose();
-    _jogadorController.dispose();
-    _assuntoController.dispose();
+    _cpfController.dispose();
     super.dispose();
   }
 }

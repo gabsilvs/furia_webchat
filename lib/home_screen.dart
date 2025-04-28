@@ -11,17 +11,27 @@ class HomeScreen extends StatelessWidget {
       'id': 'noticia1',
       'titulo': 'FURIA vence a Team Liquid e avança na ESL Pro League',
       'descricao': 'Em uma atuação dominante, a FURIA superou a Team Liquid e garantiu vaga na próxima fase.',
+      'imagem': 'assets/foto1.png',
     },
     {
       'id': 'noticia2',
       'titulo': 'FURIA anuncia chegada de novo coach para CS2',
       'descricao': 'A organização anunciou hoje a contratação de um novo treinador focado no cenário de Counter-Strike 2.',
+      'imagem': 'assets/logo.png',
     },
     {
       'id': 'noticia3',
       'titulo': 'FalleN fala sobre evolução da FURIA após últimos torneios',
       'descricao': 'Em entrevista, FalleN destacou o crescimento e adaptação da equipe nos últimos meses.',
+      'imagem': 'assets/foto3.png',
     },
+  ];
+
+  final List<String> chats = [
+    'Discussão de Partidas',
+    'Novidades e Transferências',
+    'Dúvidas e Suporte',
+    'Chat Furia Bot!',
   ];
 
   @override
@@ -43,12 +53,10 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Row(
         children: [
-          // Área de notícias (70%)
           Expanded(
             flex: 7,
             child: _buildNewsSection(),
           ),
-          // Área de chats (30%)
           Expanded(
             flex: 3,
             child: Container(
@@ -57,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                   left: BorderSide(color: Colors.grey[800]!),
                 ),
               ),
-              child: _buildChatsSection(context), // Passando o context para _buildChatsSection
+              child: _buildChatsSection(context),
             ),
           ),
         ],
@@ -82,6 +90,11 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(noticia['imagem'], fit: BoxFit.cover),
+                ),
+                const SizedBox(height: 12),
                 Text(
                   noticia['titulo'],
                   style: const TextStyle(
@@ -194,7 +207,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildChatsSection(BuildContext context) { // Recebendo o context aqui
+  Widget _buildChatsSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -209,15 +222,12 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         ),
-        _buildChatButton(context, 'Chat Geral'),
-        _buildChatButton(context, 'Discussão de Partidas'),
-        _buildChatButton(context, 'Novidades e Transferências'),
-        _buildChatButton(context, 'Dúvidas e Suporte'),
+        for (final chatName in chats) _buildChatButton(context, chatName),
       ],
     );
   }
 
-  Widget _buildChatButton(BuildContext context, String chatName) { // Recebendo o context aqui
+  Widget _buildChatButton(BuildContext context, String chatName) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ElevatedButton(
