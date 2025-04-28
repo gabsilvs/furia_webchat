@@ -1,58 +1,45 @@
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class FirebaseAuthService {
   static final _auth = FirebaseAuth.instance;
   static final _firestore = FirebaseFirestore.instance;
-  static final _storage = FirebaseStorage.instance;
 
   static Future<User?> autoLogin() async {
     return _auth.currentUser;
   }
 
-  static Future<User?> cadastrarUsuario({
+  static Future<void> cadastrarUsuario({
     required String nome,
     required String email,
     required String senha,
     required String cpf,
     required List<String> jogadores,
     required List<String> assuntos,
-    String? twitter,
-    String? instagram,
-    File? imagem,
+    String? imagemPath,
   }) async {
     try {
-      final credenciais = await _auth.createUserWithEmailAndPassword(
+      // Primeiro cria o usuário no Auth
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: senha,
       );
 
-      String? imageUrl;
-      if (imagem != null) {
-        final ref = _storage
-            .ref()
-            .child('usuarios')
-            .child('${credenciais.user!.uid}.jpg');
-        await ref.putFile(imagem);
-        imageUrl = await ref.getDownloadURL();
+      User? user = userCredential.user;
+
+      if (user != null) {
+        // Depois salva no Firestore
+        await _firestore.collection('usuarios').doc(user.uid).set({
+          'nome': nome,
+          'email': email,
+          'cpf': cpf,
+          'jogadoresFavoritos': jogadores,
+          'assuntosInteresse': assuntos,
+          'imagemPerfil': imagemPath,
+          'uid': user.uid,
+          'criadoEm': FieldValue.serverTimestamp(),
+        });
       }
-
-      await _firestore.collection('usuarios').doc(credenciais.user!.uid).set({
-        'uid': credenciais.user!.uid,
-        'nome': nome,
-        'email': email,
-        'cpf': cpf,
-        'jogadoresFavoritos': jogadores,
-        'assuntosInteresse': assuntos,
-        'twitter': twitter,
-        'instagram': instagram,
-        'fotoPerfil': imageUrl,
-        'criadoEm': Timestamp.now(),
-      });
-
-      return credenciais.user;
     } catch (e) {
       rethrow;
     }

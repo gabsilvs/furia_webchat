@@ -1,25 +1,45 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="UTF-8">
-  <title>Meu App Web</title>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FURIA Social App</title>
+  
+  <!-- Firebase SDK (versão compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  
+  <!-- Inicialização do Firebase -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyD6vJS5UpXbMlpk74U15pmG7Anwh4w0PWE",
       authDomain: "furia-chat-e70a3.firebaseapp.com",
       projectId: "furia-chat-e70a3",
-      storageBucket: "furia-chat-e70a3.firebasestorage.app",
+      storageBucket: "furia-chat-e70a3.appspot.com",
       messagingSenderId: "843892045580",
       appId: "1:843892045580:web:4d514d791fc03adcc57b29"
     };
+
+    // Inicializa o Firebase
     firebase.initializeApp(firebaseConfig);
+    
+    // Opcional: Habilita logging para debug
+    //firebase.firestore().setLogLevel('debug');
   </script>
 </head>
-
 <body>
-  <script src="main.dart.js" type="application/javascript"></script>
+  <!-- Scripts do Flutter -->
+  <script src="flutter.js" defer></script>
+  <script src="main.dart.js" type="application/javascript" defer></script>
+  
+  <script>
+    // Verifica se o Firebase foi inicializado corretamente
+    window.addEventListener('load', function() {
+      console.log('Firebase initialized:', firebase.app().name);
+      console.log('Firestore available:', !!firebase.firestore);
+    });
+  </script>
 </body>
-
 </html>

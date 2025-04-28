@@ -121,52 +121,53 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildCommentsSection(String noticiaId) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirestoreService.comentariosStream(noticiaId),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
+  return StreamBuilder<QuerySnapshot>(
+    stream: FirestoreService.comentariosStream(noticiaId),
+    builder: (context, snapshot) {
+      if (!snapshot.hasData) {
+        return const SizedBox.shrink(); // <- Sem loading
+      }
 
-        final comentarios = snapshot.data!.docs;
+      final comentarios = snapshot.data!.docs;
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: comentarios.map((doc) {
-            final data = doc.data() as Map<String, dynamic>;
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.account_circle, color: Colors.white, size: 24),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          data['autor'] ?? 'Anônimo',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: comentarios.map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(Icons.account_circle, color: Colors.white, size: 24),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        data['autor'] ?? 'Anônimo',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
-                        Text(
-                          data['texto'] ?? '',
-                          style: const TextStyle(color: Colors.white70),
-                        ),
-                      ],
-                    ),
+                      ),
+                      Text(
+                        data['texto'] ?? '',
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          }).toList(),
-        );
-      },
-    );
-  }
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      );
+    },
+  );
+}
+
 
   Widget _buildCommentField(String noticiaId) {
     final controller = TextEditingController();
@@ -291,53 +292,53 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildChatMessages(String chatName) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirestoreService.mensagensChatStream(chatName),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
+  return StreamBuilder<QuerySnapshot>(
+    stream: FirestoreService.mensagensChatStream(chatName),
+    builder: (context, snapshot) {
+      if (!snapshot.hasData) {
+        return const SizedBox.shrink(); // <- Sem loading
+      }
 
-        final messages = snapshot.data!.docs;
+      final messages = snapshot.data!.docs;
 
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: messages.length,
-          itemBuilder: (context, index) {
-            final data = messages[index].data() as Map<String, dynamic>;
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.account_circle, color: Colors.white, size: 36),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          data['autor'] ?? 'Anônimo',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+      return ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: messages.length,
+        itemBuilder: (context, index) {
+          final data = messages[index].data() as Map<String, dynamic>;
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(Icons.account_circle, color: Colors.white, size: 36),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        data['autor'] ?? 'Anônimo',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
-                        Text(
-                          data['texto'] ?? '',
-                          style: const TextStyle(color: Colors.white70),
-                        ),
-                      ],
-                    ),
+                      ),
+                      Text(
+                        data['texto'] ?? '',
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
 
   Widget _buildChatInputField(String chatName) {
     final controller = TextEditingController();

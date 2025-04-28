@@ -1,9 +1,7 @@
-// CadastroScreen.dart
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:image_picker/image_picker.dart';
 import 'firebase_auth.dart';
+
 
 class CadastroScreen extends StatefulWidget {
   const CadastroScreen({Key? key}) : super(key: key);
@@ -17,11 +15,18 @@ class _CadastroScreenState extends State<CadastroScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _senhaController = TextEditingController();
   final TextEditingController _cpfController = TextEditingController();
-  File? _imagem;
   bool _isLoading = false;
 
   List<String> _jogadoresSelecionados = [];
   List<String> _assuntosSelecionados = [];
+
+  List<String> imagensPreDefinidas = [
+    'assets/perfil1.png',
+    'assets/perfil2.png',
+    'assets/perfil3.png',
+
+  ];
+  String? _imagemSelecionada;
 
   final List<String> jogadores = [
     'yuurih',
@@ -41,22 +46,14 @@ class _CadastroScreenState extends State<CadastroScreen> {
     'Dúvidas',
   ];
 
-  Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imagem = File(pickedFile.path);
-      });
-    }
-  }
-
   Future<void> _cadastrar() async {
     if (_nomeController.text.isEmpty ||
         _emailController.text.isEmpty ||
         _senhaController.text.isEmpty ||
         _cpfController.text.isEmpty ||
         _jogadoresSelecionados.isEmpty ||
-        _assuntosSelecionados.isEmpty) {
+        _assuntosSelecionados.isEmpty ||
+        _imagemSelecionada == null) {
       _showSnackBar("Por favor, preencha todos os campos.");
       return;
     }
@@ -76,7 +73,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
         cpf: _cpfController.text,
         jogadores: _jogadoresSelecionados,
         assuntos: _assuntosSelecionados,
-        imagem: _imagem,
+        imagemPath: _imagemSelecionada,
       );
 
       Navigator.pushReplacementNamed(context, '/home');
@@ -184,33 +181,48 @@ class _CadastroScreenState extends State<CadastroScreen> {
   }
 
   Widget _buildImagePicker() {
-    return Column(
-      children: [
-        if (_imagem != null)
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: FileImage(_imagem!),
-          )
-        else
-          const Icon(Icons.account_circle, size: 100, color: Colors.white70),
-        const SizedBox(height: 10),
-        ElevatedButton.icon(
-          onPressed: _pickImage,
-          icon: const Icon(Icons.camera_alt, color: Colors.black),
-          label: const Text('Escolher Foto', style: TextStyle(color: Colors.black)),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Escolha um avatar', style: TextStyle(color: Colors.white70)),
+      const SizedBox(height: 10),
+      Wrap(
+        spacing: 12,
+        runSpacing: 12,
+        children: imagensPreDefinidas.map((imagem) {
+          bool isSelected = _imagemSelecionada == imagem;
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _imagemSelecionada = imagem;
+              });
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: isSelected
+                    ? Border.all(color: Colors.white, width: 3)
+                    : null,
+              ),
+              padding: const EdgeInsets.all(3),
+              child: ClipOval(
+                child: Image.asset(
+                  imagem,
+                  width: 90, // aumentei o tamanho
+                  height: 90,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-          ),
-        ),
-      ],
-    );
-  }
+          );
+        }).toList(),
+      ),
+    ],
+  );
+}
 
-  Widget _buildTextField(
-      TextEditingController controller, String label, IconData icon,
+
+  Widget _buildTextField(TextEditingController controller, String label, IconData icon,
       {bool obscureText = false}) {
     return TextField(
       controller: controller,

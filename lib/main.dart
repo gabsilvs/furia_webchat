@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:furia_webchat/perfil_screen.dart';
@@ -5,18 +7,12 @@ import 'login_screen.dart';
 import 'cadastro_screen.dart';
 import 'home_screen.dart';
 import 'env.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: FirebaseOptions(
-      apiKey: Env.apiKey,
-      appId: Env.appId,
-      messagingSenderId: Env.messagingSenderId,
-      projectId: Env.projectId,
-      authDomain: Env.authDomain,
-      storageBucket: Env.storageBucket,
-    ),
+    options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
 }
