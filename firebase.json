@@ -1,1 +1,27 @@
-{"flutter":{"platforms":{"dart":{"lib/firebase_options.dart":{"projectId":"furia-chat-e70a3","configurations":{"web":"1:843892045580:web:4d514d791fc03adcc57b29"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "furia-chat-e70a3",
+          "configurations": {
+            "web": "1:843892045580:web:4d514d791fc03adcc57b29"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'firebase_auth.dart';
+import 'firebase_api_service.dart';
 
 
 class CadastroScreen extends StatefulWidget {
@@ -46,43 +46,38 @@ class _CadastroScreenState extends State<CadastroScreen> {
     'Dúvidas',
   ];
 
-  Future<void> _cadastrar() async {
-    if (_nomeController.text.isEmpty ||
-        _emailController.text.isEmpty ||
-        _senhaController.text.isEmpty ||
-        _cpfController.text.isEmpty ||
-        _jogadoresSelecionados.isEmpty ||
-        _assuntosSelecionados.isEmpty ||
-        _imagemSelecionada == null) {
-      _showSnackBar("Por favor, preencha todos os campos.");
-      return;
-    }
-
-    if (!_emailController.text.contains('@')) {
-      _showSnackBar("Digite um e-mail válido.");
-      return;
-    }
-
-    setState(() => _isLoading = true);
-
-    try {
-      await FirebaseAuthService.cadastrarUsuario(
-        nome: _nomeController.text,
-        email: _emailController.text,
-        senha: _senhaController.text,
-        cpf: _cpfController.text,
-        jogadores: _jogadoresSelecionados,
-        assuntos: _assuntosSelecionados,
-        imagemPath: _imagemSelecionada,
-      );
-
-      Navigator.pushReplacementNamed(context, '/home');
-    } catch (e) {
-      _showSnackBar("Erro ao cadastrar: ${e.toString()}");
-    } finally {
-      setState(() => _isLoading = false);
-    }
+Future<void> _cadastrar() async {
+  if (_nomeController.text.isEmpty ||
+      _emailController.text.isEmpty ||
+      _senhaController.text.isEmpty ||
+      _cpfController.text.isEmpty ||
+      _jogadoresSelecionados.isEmpty ||
+      _assuntosSelecionados.isEmpty ||
+      _imagemSelecionada == null) {
+    _showSnackBar("Por favor, preencha todos os campos.");
+    return;
   }
+
+  setState(() => _isLoading = true);
+
+  try {
+    await FirebaseApiService.cadastrarUsuario(
+      nome: _nomeController.text,
+      email: _emailController.text,
+      senha: _senhaController.text,
+      cpf: _cpfController.text,
+      jogadores: _jogadoresSelecionados,
+      assuntos: _assuntosSelecionados,
+      imagemPath: _imagemSelecionada,
+    );
+
+    Navigator.pushReplacementNamed(context, '/home');
+  } catch (e) {
+    _showSnackBar("Erro ao cadastrar: ${e.toString()}");
+  } finally {
+    setState(() => _isLoading = false);
+  }
+}
 
   void _showSnackBar(String msg) {
     ScaffoldMessenger.of(context).showSnackBar(

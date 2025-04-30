@@ -8,12 +8,14 @@ import 'cadastro_screen.dart';
 import 'home_screen.dart';
 import 'env.dart';
 import 'firebase_options.dart';
+import 'firebase_api_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseApiService.configure();
   runApp(const MyApp());
 }
 

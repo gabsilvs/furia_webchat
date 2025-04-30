@@ -20,4 +20,3 @@ firebase_app_id_file.json
 .DS_Store
 Thumbs.db
 lib/env.dart
-lib/firebase_options
