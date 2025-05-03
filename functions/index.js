@@ -1,9 +1,12 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
-
+admin.firestore().settings({
+  ignoreUndefinedProperties: true,
+});
 const db = admin.firestore();
 const auth = admin.auth();
+
 
 // Função para cadastrar usuário
 exports.cadastrarUsuario = functions.https.onCall(async (data, context) => {
@@ -22,7 +25,6 @@ exports.cadastrarUsuario = functions.https.onCall(async (data, context) => {
       cpf: data.cpf,
       jogadoresFavoritos: data.jogadores,
       assuntosInteresse: data.assuntos,
-      imagemPerfil: data.imagemPath,
       uid: userRecord.uid,
       criadoEm: admin.firestore.FieldValue.serverTimestamp(),
     });
@@ -38,18 +40,16 @@ exports.adicionarComentario = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'Usuário não autenticado');
   }
-
   try {
     const docRef = await db
-      .collection('noticias')
-      .doc(data.idNoticia)
-      .collection('comentarios')
-      .add({
-        autor: data.autor,
-        texto: data.texto,
-        timestamp: admin.firestore.FieldValue.serverTimestamp(),
-      });
-
+        .collection('noticias')
+        .doc(data.idNoticia)
+        .collection('comentarios')
+        .add({
+          autor: data.autor,
+          texto: data.texto,
+          timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        });
     return { success: true, id: docRef.id };
   } catch (error) {
     throw new functions.https.HttpsError('internal', error.message);
@@ -61,18 +61,16 @@ exports.enviarMensagemChat = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'Usuário não autenticado');
   }
-
   try {
     const docRef = await db
-      .collection('chats')
-      .doc(data.nomeChat)
-      .collection('mensagens')
-      .add({
-        autor: data.autor,
-        texto: data.texto,
-        timestamp: admin.firestore.FieldValue.serverTimestamp(),
-      });
-
+        .collection('chats')
+        .doc(data.nomeChat)
+        .collection('mensagens')
+        .add({
+          autor: data.autor,
+          texto: data.texto,
+          timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        });
     return { success: true, id: docRef.id };
   } catch (error) {
     throw new functions.https.HttpsError('internal', error.message);

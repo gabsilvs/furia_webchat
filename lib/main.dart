@@ -2,20 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:furia_webchat/perfil_screen.dart';
-import 'login_screen.dart';
-import 'cadastro_screen.dart';
-import 'home_screen.dart';
-import 'env.dart';
-import 'firebase_options.dart';
-import 'firebase_api_service.dart';
+import 'package:furia_webchat/screens/perfil_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/cadastro_screen.dart';
+import 'screens/home_screen.dart';
+import 'services/firebase_options.dart';
+import 'services/firebase_api_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseApiService.configure();
   runApp(const MyApp());
 }
 

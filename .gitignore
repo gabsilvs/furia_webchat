@@ -9,7 +9,7 @@ build/
 generated_plugin_registrant.dart
 
 # Firebase
-firebase_options.dart
+services/firebase_options.dart
 
 # Web
 web/.dart_tool/
@@ -17,49 +17,6 @@ web/build/
 web/firebase-debug.log
 web/firebase.json
 
-# Android
-android/.gradle/
-android/.idea/
-android/local.properties
-android/build/
-
-# iOS
-ios/Pods/
-ios/.symlinks/
-ios/Flutter/Flutter.framework
-ios/Flutter/Flutter.podspec
-ios/build/
-
-# Xcode
-*.xcworkspace
-*.xcuserstate
-*.xcodeproj/project.xcworkspace/
-xcuserdata/
-DerivedData/
-
 # VS Code
 .vscode/
 
-# Mac OS
-.DS_Store
-
-# Others
-.idea/
-*.iml
-
-<<<<<<< HEAD
-# System files
-.DS_Store
-Thumbs.db
-lib/env.dart
-=======
-# Logs
-*.log
-
-# Node modules (se usar no projeto web)
-node_modules/
-
-# Crashlytics / Firebase files
-android/app/google-services.json
-ios/Runner/GoogleService-Info.plist
->>>>>>> b951a311ec0d998eb93c898ddb7a0e8566d3fed0
