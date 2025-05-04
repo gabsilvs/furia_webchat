@@ -132,8 +132,7 @@ dependencies:
 
 1. Crie um projeto no [Firebase Console](https://console.firebase.google.com/)
 2. Adicione o aplicativo Flutter ao projeto
-3. Baixe o `google-services.json` e adicione à pasta `android/app/`
-4. Habilite os serviços:
+3. Habilite os serviços:
    - Authentication (E-mail/Senha, Anônimo)
    - Firestore
    - Cloud Functions
@@ -152,4 +151,6 @@ exports.cadastrarUsuario = functions.https.onCall(async (data, context) => {
 ```
 
 ---
+
+## Link do Protótipo para acessar: https://furia-chat-e70a3.web.app
 
